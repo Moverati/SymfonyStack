@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+/**
+ * RAPP
+ *
+ * LICENSE
+ *
+ * This file is intellectual property of RAPP and may not
+ * be used without permission.
+ *
+ * @category  RAPP
+ * @copyright Copyright (c) 2011 RAPP. (http://www.rapp.com/)
+ */
+
+/**
+ * Console Bootstrap
+ *
+ * @author    Geoffrey Tran
+ * @category  RAPP
+ * @copyright Copyright (c) 2011 RAPP. (http://www.rapp.com/)
+ */
+
+require_once __DIR__ . '/../app/bootstrap.php.cache';
+require_once __DIR__ . '/../app/AppKernel.php';
+
+use Symfony\Bundle\FrameworkBundle\Console\Application,
+    Symfony\Component\Console\Input\ArgvInput;
+
+$input = new ArgvInput();
+$env   = $input->getParameterOption(array('--env', '-e'), AppKernel::ENVIRONMENT_DEV);
+$debug = !$input->hasParameterOption(array('--no-debug', ''));
+
+// Setup the kernel
+$kernel      = new AppKernel($env, $debug);
+
+// Run the application
+$application = new Application($kernel);
+$application->run();

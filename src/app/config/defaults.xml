@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+                        http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="csrf.secret">b011a4f1b18d2c8b01dcabdfbbfc09310</parameter>
+        <parameter key="locale">en</parameter>
+        <parameter key="assets.base_urls">test,test2</parameter>
+
+        <!-- doctrine.xml -->
+        <parameter key="db.default.driver"></parameter>
+        <parameter key="db.default.dbname"></parameter>
+        <parameter key="db.default.host"></parameter>
+        <parameter key="db.default.user"></parameter>
+        <parameter key="db.default.password"></parameter>
+
+        <!-- mailer.xml -->
+        <parameter key="mail.transport">mail</parameter>
+        <parameter key="mail.host"></parameter>
+        <parameter key="mail.username"></parameter>
+        <parameter key="mail.password"></parameter>
+    </parameters>
+</container>

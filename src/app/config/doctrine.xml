@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<srv:container xmlns:srv="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://symfony.com/schema/dic/doctrine"
+    xmlns:migrations="http://symfony.com/schema/dic/doctrine/migrations"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+                        http://symfony.com/schema/dic/services/services-1.0.xsd
+                        http://symfony.com/schema/dic/doctrine
+                        http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd">
+    <config>
+        <dbal default-connection="default">
+            <connection name="default"
+                                 driver="%db.default.driver%"
+                                 dbname="%db.default.dbname%"
+                                 host="%db.default.host%"
+                                 user="%db.default.user%"
+                                 password="%db.default.password%"
+                                 charset="UTF8" />
+        </dbal>
+
+        <orm auto-generate-proxy-classes="%kernel.debug%">
+            <entity-manager name="default"
+                            connection="default"
+                            metadata-cache-driver="array"
+                            result-cache-driver="array"
+                            query-cache-driver="array">
+                <mapping name="AcmeDemoBundle" />
+            </entity-manager>
+        </orm>
+    </config>
+
+    <!--migrations:config /-->
+</srv:container>

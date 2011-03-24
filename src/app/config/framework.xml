@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<srv:container xmlns="http://symfony.com/schema/dic/symfony"
+               xmlns:srv="http://symfony.com/schema/dic/services"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://symfony.com/schema/dic/services
+                                   http://symfony.com/schema/dic/services/services-1.0.xsd
+                                   http://symfony.com/schema/dic/symfony
+                                   http://symfony.com/schema/dic/symfony/symfony-1.0.xsd"
+>    
+    <config charset="UTF-8">
+        <csrf-protection enabled="true" secret="%csrf.secret%" />
+        <router resource="%kernel.root_dir%/config/routing.xml" />
+        <validation enabled="true" annotations="true" />
+        <templating assets-base-urls="%assets.base_urls%">
+            <engine id="twig" />
+            <engine id="php" />
+        </templating>
+        <session default-locale="%locale%" lifetime="3600" auto-start="true" />
+    </config>
+</srv:container>
