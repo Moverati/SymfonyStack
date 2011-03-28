@@ -1,0 +1,2 @@
+knplabs_paginator:
+    templating: ~ # enables view helper and twig

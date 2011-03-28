@@ -11,9 +11,10 @@
         <csrf-protection enabled="true" secret="%csrf.secret%" />
         <router resource="%kernel.root_dir%/config/routing.xml" />
         <validation enabled="true" annotations="true" />
-        <templating assets-base-urls="%assets.base_urls%">
+        <templating>
             <engine id="twig" />
             <engine id="php" />
+            <assets-base-url>%assets.base_urls%</assets-base-url>
         </templating>
         <session default-locale="%locale%" lifetime="3600" auto-start="true" />
     </config>

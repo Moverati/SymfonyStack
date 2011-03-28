@@ -29,14 +29,16 @@
             <user name="admin" password="adminpass" roles="ROLE_ADMIN" />
         </provider>
 
-        <firewall name="profiler" pattern="/_profiler.*"        security="false" />
-        <firewall name="wdt" pattern="/_wdt.*"             security="false" />
+        <provider name="fos_userbundle" id="fos_user.user_manager" />
+
+        <firewall name="profiler" pattern="/_profiler.*" security="false" />
+        <firewall name="wdt" pattern="/_wdt.*" security="false" />
         <firewall name="login" pattern="/demo/secured/login" security="false" />
         <firewall name="secured_area" pattern="/demo/secured/.*">
             <form-login check_path="/demo/secured/login_check" login_path="/demo/secured/login" />
             <logout path="/demo/secured/logout" target="/demo/" />
         </firewall>
-
+        <firewall name="main" anonymous="true" />
 
         <access-control>
             <rule path="/login" role="IS_AUTHENTICATED_ANONYMOUSLY" />
@@ -46,5 +48,5 @@
             <connection>default</connection>
             <cache>doctrine</cache>
         </acl>
-    </config>    
+    </config>
 </srv:container>

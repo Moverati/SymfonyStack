@@ -8,4 +8,7 @@
 
     <import resource="@AcmeDemoBundle/Controller/SecuredController.php" type="annotation" />
     <import resource="@AcmeDemoBundle/Controller/DemoController.php"    type="annotation" prefix="demo" />
+
+    <import resource="@FOSUserBundle/Resources/config/routing/security.xml"/>
+    <import resource="@FOSUserBundle/Resources/config/routing/user.xml" prefix="/user" />
 </routes>

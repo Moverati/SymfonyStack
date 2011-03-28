@@ -6,7 +6,7 @@
     <parameters>
         <parameter key="csrf.secret">b011a4f1b18d2c8b01dcabdfbbfc09310</parameter>
         <parameter key="locale">en</parameter>
-        <parameter key="assets.base_urls">test,test2</parameter>
+        <parameter key="assets.base_urls"></parameter>
 
         <!-- doctrine.xml -->
         <parameter key="db.default.driver"></parameter>

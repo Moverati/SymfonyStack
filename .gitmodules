@@ -1,0 +1,6 @@
+[submodule "vendor/bundles/Knplabs/PaginatorBundle"]
+	path = vendor/bundles/Knplabs/PaginatorBundle
+	url = git://github.com/knplabs/PaginatorBundle.git
+[submodule "vendor/bundles/FOS/UserBundle"]
+	path = vendor/bundles/FOS/UserBundle
+	url = git://github.com/FriendsOfSymfony/UserBundle.git

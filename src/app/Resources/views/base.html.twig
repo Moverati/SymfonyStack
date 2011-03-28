@@ -5,12 +5,12 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
 
         <!-- Start: Styles -->
-        {% assetic filter="?yui_css", output="styles/default.css",
+        {# assetic filter="?yui_css", output="styles/default.css",
             "@MainBundle/Resources/sass/main.scss",
             "@AnotherBundle/Resources/sass/more.scss"
         %}
         <link href="{{ asset_url }}" rel="stylesheet" />
-        {% endassetic %}
+        {% endassetic #}
         {% block styles %}{% endblock %}
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
         <!-- End: Styles -->

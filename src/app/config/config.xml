@@ -14,6 +14,8 @@
         <import resource="mailer.xml" />
         <import resource="security.xml" />
         <import resource="jms_security_extra.yml" />
+        <import resource="knplabs_paginator.yml" />
+        <import resource="fos_user.yml" />
         
         <import resource="../../config/mail.xml" />
     </imports>
