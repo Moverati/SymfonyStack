@@ -7,3 +7,6 @@
 [submodule "src/vendor/bundles/FOS/UserBundle"]
 	path = src/vendor/bundles/FOS/UserBundle
 	url = git://github.com/FriendsOfSymfony/UserBundle.git
+[submodule "src/vendor/assetic"]
+	path = src/vendor/assetic
+	url = git://github.com/kriswallsmith/assetic.git
