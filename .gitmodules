@@ -28,9 +28,6 @@
 [submodule "src/vendor/twig-extensions"]
 	path = src/vendor/twig-extensions
 	url = git://github.com/fabpot/Twig-extensions.git
-[submodule "monolog"]
-	path = monolog
-	url = https://github.com/Seldaek/monolog.git
 [submodule "src/vendor/bundles/JMS/SecurityExtraBundle"]
 	path = src/vendor/bundles/JMS/SecurityExtraBundle
 	url = https://github.com/schmittjoh/SecurityExtraBundle.git
