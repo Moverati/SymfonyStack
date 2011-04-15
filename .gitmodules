@@ -19,3 +19,6 @@
 [submodule "src/vendor/doctrine-common"]
 	path = src/vendor/doctrine-common
 	url = git://github.com/doctrine/common.git
+[submodule "src/vendor/swiftmailer"]
+	path = src/vendor/swiftmailer
+	url = git://github.com/swiftmailer/swiftmailer.git
