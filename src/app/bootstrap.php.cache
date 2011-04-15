@@ -293,7 +293,7 @@ abstract class Bundle extends ContainerAware implements BundleInterface
         if (null === $this->reflected) {
             $this->reflected = new \ReflectionObject($this);
         }
-        return strtr(dirname($this->reflected->getFileName()), '\\', '/');
+        return dirname($this->reflected->getFileName());
     }
     public function getParent()
     {
@@ -427,7 +427,11 @@ class HttpKernel implements HttpKernelInterface
                 $response = $event->getResponse();
             }
             if (!$response instanceof Response) {
-                throw new \LogicException(sprintf('The controller must return a response (%s given).', $this->varToString($response)));
+                $msg = sprintf('The controller must return a response (%s given).', $this->varToString($response));
+                                if (null === $response) {
+                    $msg .= ' Did you forget to add a return statement somewhere in your controller?';
+                }
+                throw new \LogicException($msg);
             }
         }
         return $this->filterResponse($response, $request, $type);
@@ -445,7 +449,11 @@ class HttpKernel implements HttpKernelInterface
         if (!$event->hasResponse()) {
             throw $e;
         }
-        return $this->filterResponse($event->getResponse(), $request, $type);
+        try {
+            return $this->filterResponse($event->getResponse(), $request, $type);
+        } catch (\Exception $e) {
+            return $event->getResponse();
+        }
     }
     private function varToString($var)
     {
@@ -461,6 +469,9 @@ class HttpKernel implements HttpKernelInterface
         }
         if (is_resource($var)) {
             return '[resource]';
+        }
+        if (null === $var) {
+            return 'null';
         }
         return str_replace("\n", '', var_export((string) $var, true));
     }
@@ -599,9 +610,8 @@ abstract class Kernel implements KernelInterface
         }
         if (true === $first) {
             return $this->bundleMap[$name][0];
-        } elseif (false === $first) {
-            return $this->bundleMap[$name];
         }
+        return $this->bundleMap[$name];
     }
     public function locateResource($name, $dir = null, $first = true)
     {
@@ -612,25 +622,36 @@ abstract class Kernel implements KernelInterface
             throw new \RuntimeException(sprintf('File name "%s" contains invalid characters (..).', $name));
         }
         $name = substr($name, 1);
-        list($bundle, $path) = explode('/', $name, 2);
-        $isResource = 0 === strpos($path, 'Resources');
+        list($bundleName, $path) = explode('/', $name, 2);
+        $isResource = 0 === strpos($path, 'Resources') && null !== $dir;
+        $overridePath = substr($path, 9);
+        $resourceBundle = null;
+        $bundles = $this->getBundle($bundleName, false);
         $files = array();
-        if (true === $isResource && null !== $dir && file_exists($file = $dir.'/'.$bundle.'/'.substr($path, 10))) {
-            if ($first) {
-                return $file;
-            }
-            $files[] = $file;
-        }
-        foreach ($this->getBundle($bundle, false) as $bundle) {
-            if (file_exists($file = $bundle->getPath().'/'.$path)) {
+        foreach ($bundles as $bundle) {
+            if ($isResource && file_exists($file = $dir.'/'.$bundle->getName().$overridePath)) {
+                if (null !== $resourceBundle) {
+                    throw new \RuntimeException(sprintf('"%s" resource is hidden by a resource from the "%s" derived bundle. Create a "%s" file to override the bundle resource.',
+                        $file,
+                        $resourceBundle,
+                        $dir.'/'.$bundles[0]->getName().$overridePath
+                    ));
+                }
                 if ($first) {
                     return $file;
                 }
                 $files[] = $file;
             }
+            if (file_exists($file = $bundle->getPath().'/'.$path)) {
+                if ($first && !$isResource) {
+                    return $file;
+                }
+                $files[] = $file;
+                $resourceBundle = $bundle->getName();
+            }
         }
-        if ($files) {
-            return $files;
+        if (count($files) > 0) {
+            return $first && $isResource ? $files[0] : $files;
         }
         throw new \InvalidArgumentException(sprintf('Unable to find file "@%s".', $name));
     }
@@ -684,6 +705,9 @@ abstract class Kernel implements KernelInterface
             if ($parentName = $bundle->getParent()) {
                 if (isset($directChildren[$parentName])) {
                     throw new \LogicException(sprintf('Bundle "%s" is directly extended by two bundles "%s" and "%s".', $parentName, $name, $directChildren[$parentName]));
+                }
+                if ($parentName == $name) {
+                    throw new \LogicException(sprintf('Bundle "%s" can not extend itself.', $name));
                 }
                 $directChildren[$parentName] = $name;
             } else {
@@ -779,10 +803,10 @@ abstract class Kernel implements KernelInterface
             $dir = $container->getParameter(sprintf('kernel.%s_dir', $name));
             if (!is_dir($dir)) {
                 if (false === @mkdir($dir, 0777, true)) {
-                    die(sprintf("Unable to create the %s directory (%s)\n", $name, dirname($dir)));
+                    exit(sprintf("Unable to create the %s directory (%s)\n", $name, dirname($dir)));
                 }
             } elseif (!is_writable($dir)) {
-                die(sprintf("Unable to write in the %s directory (%s)\n", $name, $dir));
+                exit(sprintf("Unable to write in the %s directory (%s)\n", $name, $dir));
             }
         }
         $container->compile();
@@ -864,6 +888,45 @@ class ParameterBag
     public function get($key, $default = null)
     {
         return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
+    }
+    public function getDeep($path, $default = null)
+    {
+        if (false === $pos = strpos($path, '[')) {
+            return $this->get($path, $default);
+        }
+        $root = substr($path, 0, $pos);
+        if (!array_key_exists($root, $this->parameters)) {
+            return $default;
+        }
+        $value = $this->parameters[$root];
+        $currentKey = null;
+        for ($i=$pos,$c=strlen($path); $i<$c; $i++) {
+            $char = $path[$i];
+            if ('[' === $char) {
+                if (null !== $currentKey) {
+                    throw new \InvalidArgumentException(sprintf('Malformed path. Unexpected "[" at position %d.', $i));
+                }
+                $currentKey = '';
+            } else if (']' === $char) {
+                if (null === $currentKey) {
+                    throw new \InvalidArgumentException(sprintf('Malformed path. Unexpected "]" at position %d.', $i));
+                }
+                if (!is_array($value) || !array_key_exists($currentKey, $value)) {
+                    return $default;
+                }
+                $value = $value[$currentKey];
+                $currentKey = null;
+            } else {
+                if (null === $currentKey) {
+                    throw new \InvalidArgumentException(sprintf('Malformed path. Unexpected "%s" at position %d.', $char, $i));
+                }
+                $currentKey .= $char;
+            }
+        }
+        if (null !== $currentKey) {
+            throw new \InvalidArgumentException(sprintf('Malformed path. Path must end with "]".'));
+        }
+        return $value;
     }
     public function set($key, $value)
     {
@@ -1192,7 +1255,7 @@ class Request
         $this->method = null;
         $this->format = null;
     }
-    static public function createfromGlobals()
+    static public function createFromGlobals()
     {
         return new static($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
     }
@@ -1923,7 +1986,7 @@ class UniversalClassLoader
             require $file;
         }
     }
-    protected function findFile($class)
+    public function findFile($class)
     {
         if ('\\' == $class[0]) {
             $class = substr($class, 1);
@@ -1988,6 +2051,15 @@ class MapFileClassLoader
         }
         if (isset($this->map[$class])) {
             require $this->map[$class];
+        }
+    }
+    public function findFile($class)
+    {
+        if ('\\' === $class[0]) {
+            $class = substr($class, 1);
+        }
+        if (isset($this->map[$class])) {
+            return $this->map[$class];
         }
     }
 }

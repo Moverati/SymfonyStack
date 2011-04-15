@@ -22,3 +22,12 @@
 [submodule "src/vendor/swiftmailer"]
 	path = src/vendor/swiftmailer
 	url = git://github.com/swiftmailer/swiftmailer.git
+[submodule "src/vendor/twig"]
+	path = src/vendor/twig
+	url = git://github.com/fabpot/Twig.git
+[submodule "src/vendor/twig-extensions"]
+	path = src/vendor/twig-extensions
+	url = git://github.com/fabpot/Twig-extensions.git
+[submodule "monolog"]
+	path = monolog
+	url = https://github.com/Seldaek/monolog.git

@@ -1,4 +1,15 @@
 <?php
+/**
+ * RAPP
+ *
+ * LICENSE
+ *
+ * This file is intellectual property of RAPP and may not
+ * be used without permission.
+ *
+ * @category  RAPP
+ * @copyright Copyright (c) 2011 RAPP. (http://www.rapp.com/)
+ */
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
@@ -10,8 +21,8 @@ $loader->registerNamespaces(array(
     'Doctrine\\Common' => __DIR__.'/../vendor/doctrine-common/lib',
     'Doctrine\\DBAL'   => __DIR__.'/../vendor/doctrine-dbal/lib',
     'Doctrine'         => __DIR__.'/../vendor/doctrine/lib',
-    'Zend\\Log'        => __DIR__.'/../vendor/zend-log',
     'Assetic'          => __DIR__.'/../vendor/assetic/src',
+    'Monolog'          => __DIR__.'/../vendor/monolog/src',
     'Acme'             => __DIR__.'/../src',
     'Knplabs'          => __DIR__.'/../vendor/bundles',
     'FOS'              => __DIR__.'/../vendor/bundles',
