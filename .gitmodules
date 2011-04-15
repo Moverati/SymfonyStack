@@ -31,3 +31,12 @@
 [submodule "monolog"]
 	path = monolog
 	url = https://github.com/Seldaek/monolog.git
+[submodule "src/vendor/bundles/JMS/SecurityExtraBundle"]
+	path = src/vendor/bundles/JMS/SecurityExtraBundle
+	url = https://github.com/schmittjoh/SecurityExtraBundle.git
+[submodule "src/vendor/bundles/Sensio/Bundle/FrameworkExtraBundle"]
+	path = src/vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
+	url = https://github.com/sensio/SensioFrameworkExtraBundle.git
+[submodule "src/vendor/monolog"]
+	path = src/vendor/monolog
+	url = https://github.com/Seldaek/monolog.git
