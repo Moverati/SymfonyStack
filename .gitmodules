@@ -10,3 +10,6 @@
 [submodule "src/vendor/assetic"]
 	path = src/vendor/assetic
 	url = git://github.com/kriswallsmith/assetic.git
+[submodule "src/vendor/doctrine"]
+	path = src/vendor/doctrine
+	url = git://github.com/doctrine/doctrine2.git
