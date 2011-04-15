@@ -12,6 +12,12 @@
  * @copyright Copyright (c) 2011 RAPP. (http://www.rapp.com/)
  */
 
+require_once __DIR__ . '/../app/bootstrap.php.cache';
+require_once __DIR__ . '/../app/AppKernel.php';
+
+use Symfony\Bundle\FrameworkBundle\Console\Application,
+    Symfony\Component\Console\Input\ArgvInput;
+
 /**
  * Console Bootstrap
  *
@@ -19,12 +25,6 @@
  * @category  RAPP
  * @copyright Copyright (c) 2011 RAPP. (http://www.rapp.com/)
  */
-
-require_once __DIR__ . '/../app/bootstrap.php.cache';
-require_once __DIR__ . '/../app/AppKernel.php';
-
-use Symfony\Bundle\FrameworkBundle\Console\Application,
-    Symfony\Component\Console\Input\ArgvInput;
 
 $input = new ArgvInput();
 $env   = $input->getParameterOption(array('--env', '-e'), AppKernel::ENVIRONMENT_DEV);
