@@ -76,8 +76,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Acme\DemoBundle\AcmeDemoBundle(),
-            new Moverati\Bundle\KnplabsPaginatorBundle\KnplabsPaginatorBundle(),
-            new FOS\UserBundle\FOSUserBundle()
+            //new Moverati\Bundle\KnplabsPaginatorBundle\KnplabsPaginatorBundle(),
+            //new FOS\UserBundle\FOSUserBundle()
         );
 
         if (in_array($this->getEnvironment(), $this->debugEnvironments)) {
