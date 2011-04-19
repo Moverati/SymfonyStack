@@ -38,12 +38,12 @@ ClassCollectionLoader::load(array(
     'Symfony\\Component\\HttpKernel\\KernelInterface',
     'Symfony\\Component\\HttpKernel\\Kernel',
 
-    //'Symfony\\Component\\HttpFoundation\\ParameterBag',
-    //'Symfony\\Component\\HttpFoundation\\FileBag',
-    //'Symfony\\Component\\HttpFoundation\\ServerBag',
-    //'Symfony\\Component\\HttpFoundation\\HeaderBag',
-    //'Symfony\\Component\\HttpFoundation\\Request',
-    //'Symfony\\Component\\HttpFoundation\\ApacheRequest',
+    'Symfony\\Component\\HttpFoundation\\ParameterBag',
+    'Symfony\\Component\\HttpFoundation\\FileBag',
+    'Symfony\\Component\\HttpFoundation\\ServerBag',
+    'Symfony\\Component\\HttpFoundation\\HeaderBag',
+    'Symfony\\Component\\HttpFoundation\\Request',
+    'Symfony\\Component\\HttpFoundation\\ApacheRequest',
 
     'Symfony\\Component\\ClassLoader\\ClassCollectionLoader',
     'Symfony\\Component\\ClassLoader\\UniversalClassLoader',

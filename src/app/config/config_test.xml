@@ -7,6 +7,5 @@
         <import resource="config_dev.xml" />
         <import resource="framework_test.xml" />
         <import resource="web_profiler_test.xml" />
-        <import resource="zend.xml" />
     </imports>
 </container>

@@ -37,3 +37,6 @@
 [submodule "src/vendor/monolog"]
 	path = src/vendor/monolog
 	url = https://github.com/Seldaek/monolog.git
+[submodule "src/vendor/doctrine-migrations"]
+	path = src/vendor/doctrine-migrations
+	url = https://github.com/doctrine/migrations.git

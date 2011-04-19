@@ -1,7 +1,6 @@
 fos_user:
     db_driver: orm
-    provider_key: login
+    firewall_name: login
     class:
         model:
             user: MyProject\MyBundle\Entity\User
-            group: FOS\UserBundle\Entity\DefaultGroup

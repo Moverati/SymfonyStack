@@ -5,18 +5,11 @@
                xsi:schemaLocation="http://symfony.com/schema/dic/services
                                    http://symfony.com/schema/dic/services/services-1.0.xsd"
 >
-    <srv:parameters>
-        <srv:parameter key="security.acl.dbal.class_table_name">AclClass</srv:parameter>
-        <srv:parameter key="security.acl.dbal.entry_table_name">AclEntry</srv:parameter>
-        <srv:parameter key="security.acl.dbal.oid_table_name">AclObjectIdentity</srv:parameter>
-        <srv:parameter key="security.acl.dbal.oid_ancestors_table_name">AclObjectIdentityAncestor</srv:parameter>
-        <srv:parameter key="security.acl.dbal.sid_table_name">AclSecurityIdentity</srv:parameter>
-    </srv:parameters>
-
     <srv:services>
-            <!-- Bugfix -->
-            <srv:service id="security.acl.cache.doctrine_cache_impl" alias="security.acl.cache.doctrine.cache_impl" public="false" />
+        <!-- Bugfix -->
+        <srv:service id="security.acl.cache.doctrine_cache_impl" alias="security.acl.cache.doctrine.cache_impl" public="false" />
     </srv:services>
+    
     <!-- @see http://trac.symfony-project.org/browser/branches/2.0/src/Symfony/Bundle/SecurityBundle/Tests/DependencyInjection/Fixtures/xml/container1.xml?rev=32184 -->
     <config>
         <encoder class="Symfony\Component\Security\Core\User\User" algorithm="plaintext" />
@@ -29,8 +22,9 @@
             <user name="admin" password="adminpass" roles="ROLE_ADMIN" />
         </provider>
 
+<!--
         <provider name="fos_userbundle" id="fos_user.user_manager" />
-
+-->
         <firewall name="profiler" pattern="/_profiler.*" security="false" />
         <firewall name="wdt" pattern="/_wdt.*" security="false" />
         <firewall name="login" pattern="/demo/secured/login" security="false" />
@@ -46,7 +40,7 @@
 
         <acl>
             <connection>default</connection>
-            <cache>doctrine</cache>
+            <cache id="security.acl.cache.doctrine" />
         </acl>
     </config>
 </srv:container>

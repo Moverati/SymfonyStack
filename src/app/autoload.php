@@ -20,6 +20,7 @@ $loader->registerNamespaces(array(
     'JMS'              => __DIR__.'/../vendor/bundles',
     'Doctrine\\Common' => __DIR__.'/../vendor/doctrine-common/lib',
     'Doctrine\\DBAL'   => __DIR__.'/../vendor/doctrine-dbal/lib',
+    'Doctrine\\DBAL\\Migrations'   => __DIR__.'/../vendor/doctrine-migrations/lib',
     'Doctrine'         => __DIR__.'/../vendor/doctrine/lib',
     'Assetic'          => __DIR__.'/../vendor/assetic/src',
     'Monolog'          => __DIR__.'/../vendor/monolog/src',

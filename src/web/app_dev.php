@@ -19,7 +19,7 @@
  * @copyright Copyright (c) 2011 RAPP. (http://www.rapp.com/)
  */
  
-$_ENV['ENVIRONMENT'] = 'prod';
+$_ENV['ENVIRONMENT'] = 'dev';
 $_ENV['DEBUG']       = true;
 
 require_once 'app.php';

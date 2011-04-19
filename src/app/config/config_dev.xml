@@ -8,6 +8,5 @@
         <import resource="assetic_dev.xml" />
         <import resource="framework_dev.xml" />
         <import resource="web_profiler_dev.xml" />
-        <import resource="zend.xml" />
     </imports>
 </container>

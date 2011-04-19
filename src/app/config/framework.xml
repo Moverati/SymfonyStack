@@ -12,8 +12,8 @@
         <router resource="%kernel.root_dir%/config/routing.xml" />
         <validation enabled="true" annotations="true" />
         <templating>
-            <engine id="twig" />
-            <engine id="php" />
+            <engine>twig</engine>
+            <engine>php</engine>
             <assets-base-url>%assets.base_urls%</assets-base-url>
         </templating>
         <session default-locale="%locale%" lifetime="3600" auto-start="true" />
