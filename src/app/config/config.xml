@@ -26,17 +26,19 @@
     <parameters>
         <!-- doctrine.xml -->
         <parameter key="doctrine_migrations.dir_name">%kernel.data_dir%/migrations</parameter>
-        <parameter key="doctrine_migrations.table_name">DoctrineMigrationsVersion</parameter>
         <!--
+        <parameter key="doctrine_migrations.table_name">DoctrineMigrationsVersion</parameter>
         <parameter key="doctrine_migrations.namespace">Application\Migrations</parameter>
         <parameter key="doctrine_migrations.name">Application Migrations</parameter>
         -->
 
         <!-- security.xml -->
+        <!--
         <parameter key="security.acl.dbal.class_table_name">AclClass</parameter>
         <parameter key="security.acl.dbal.entry_table_name">AclEntry</parameter>
         <parameter key="security.acl.dbal.oid_table_name">AclObjectIdentity</parameter>
         <parameter key="security.acl.dbal.oid_ancestors_table_name">AclObjectIdentityAncestor</parameter>
         <parameter key="security.acl.dbal.sid_table_name">AclSecurityIdentity</parameter>
+        -->
     </parameters>
 </container>
