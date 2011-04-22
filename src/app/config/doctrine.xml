@@ -29,5 +29,5 @@
         </orm>
     </config>
 
-    <!--migrations:config /-->
+    <migrations:config />
 </srv:container>

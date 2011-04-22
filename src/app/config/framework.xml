@@ -17,5 +17,6 @@
             <assets-base-url>%assets.base_urls%</assets-base-url>
         </templating>
         <session default-locale="%locale%" lifetime="3600" auto-start="true" />
+        <translator fallback="en" />
     </config>
 </srv:container>
