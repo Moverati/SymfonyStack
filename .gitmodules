@@ -1,8 +1,8 @@
 [submodule "src/vendor/symfony"]
 	path = src/vendor/symfony
 	url = git://github.com/symfony/symfony.git
-[submodule "src/vendor/bundles/Knplabs/PaginatorBundle"]
-	path = src/vendor/bundles/Knplabs/PaginatorBundle
+[submodule "src/vendor/bundles/Knplabs/Bundle/PaginatorBundle"]
+	path = src/vendor/bundles/Knplabs/Bundle/PaginatorBundle
 	url = git://github.com/knplabs/PaginatorBundle.git
 [submodule "src/vendor/bundles/FOS/UserBundle"]
 	path = src/vendor/bundles/FOS/UserBundle

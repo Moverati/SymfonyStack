@@ -6,5 +6,7 @@
                         http://symfony.com/schema/dic/services/services-1.0.xsd
                         http://symfony.com/schema/dic/assetic
                         http://symfony.com/schema/dic/assetic/assetic-1.0.xsd">
-    <config debug="%kernel.debug%" use-controller="false" />
+    <config debug="%kernel.debug%" use-controller="false">
+        <filter name="scss" />
+    </config>
 </srv:container>

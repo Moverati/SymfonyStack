@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+================================================================================
+ Application Phing build.xml File
+
+ Requirements:
+
+ - PHP 5.3.2
+ - Phing 2.4.0
+ - PHPDocumentor 1.3.1
+ - PHPUnit 3.6
+
+ PHP Configuration Requirements:
+ - None
+
+ Usage:
+   phing [ <options> ] [ <targets> ]
+
+ Options:
+   -D<property>={value}
+     Override a property in build.properties
+
+================================================================================
+xmlns="http://svn.phing.info/trunk/etc/phing-grammar.rng"
+-->
+<project name="Application" description="Application Framework" default="dist">
+    <property file="${application.startdir}/build.properties" />
+
+    <target name="dist" depends="init, test, api">
+        <echo msg="Building distribution..." />
+    </target>
+
+    <!--
+    ============================================================================
+    Bootstrapping Targets
+    ============================================================================
+    -->
+    <target name="init">
+        <echo msg="Setting PHP Memory Limit to ${php.memory_limit}..." />
+
+        <php function="ini_set">
+            <param value="memory_limit"/>
+            <param value="${php.memory_limit}"/>
+        </php>
+    </target>
+
+
+    <!--
+    ============================================================================
+    Database Targets
+    ============================================================================
+    -->
+    <target name="db.migrate">
+        <echo msg="Checking if database migration is needed..." />
+
+        <exec dir="bin"
+              command="console doctrine:migrations:status | grep -E -o 'New Migrations:.+([0-9]+)' | grep -E -o '([0-9]+)'"
+              outputProperty="db.migrate.has_migrations">
+        </exec>
+
+        <if>
+            <not>
+                <equals arg1="0" arg2="${db.migrate.has_migrations}" />
+            </not>
+
+            <then>
+                <echo msg="Available Migrations: ${db.migrate.has_migrations}" />
+                <echo msg="Migrating database..." />
+                <exec dir="bin"
+                      command="/bin/bash -c 'console doctrine:migrations:migrate &lt;&lt;&lt;y'">
+                </exec>
+            </then>
+
+            <else>
+                <echo msg="No migrations available" />
+            </else>
+        </if>
+    </target>
+
+    <target name="db.migrate.check">
+        <echo msg="Checking if database migrations is missing..." />
+
+        <exec dir="bin"
+              command="console doctrine:migrations:status | grep -E -o 'New Migrations:.+([0-9]+)' | grep -E -o '([0-9]+)'"
+              outputProperty="db.migrate.has_migrations">
+        </exec>
+
+        <if>
+            <not>
+                <equals arg1="0" arg2="${db.migrate.has_migrations}" />
+            </not>
+
+            <then>
+                <echo msg="Available Migrations: ${db.migrate.has_migrations}" />
+                <echo msg="Migrating database..." />
+                <exec dir="bin"
+                      command="/bin/bash -c 'console doctrine:migrations:migrate &lt;&lt;&lt;y'">
+                </exec>
+                <fail message="Missing database migrations, did you forget to generate them?" />
+            </then>
+
+            <else>
+                <echo msg="No migrations available" />
+            </else>
+        </if>
+    </target>
+
+
+    <target name="tag">
+        <!-- Prompt for version if not exist -->
+        <if>
+            <isfalse value="${project.version}" />
+            <then>
+                <input propertyname="project.version">Enter the version to tag (major.minor.mini)</input>
+            </then>
+        </if>
+
+        <echo msg="Tagging ${project.version}..." />
+
+        <reflexive file="${application.startdir}/build.properties">
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="project\.version[\t ]*(=[\t ]*([0-9a-zA-Z\.]*))" replace="= ${project.version}" />
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+    </target>
+
+
+    <!--
+    ============================================================================
+    Documentation Targets
+    ============================================================================
+    -->
+    <target name="api" description="Create API documentation">
+        <exec dir="${path.src}"
+            command="phpuml -o ${path.build}/api -f htmlnew ${path.src}">
+        </exec>
+    </target>
+
+    <target name="docs" description="Create reference manual">
+        <phing phingfile="${project.basedir}/docs/manual/build/build.xml" inheritall="false" />
+    </target>
+
+    <!--
+    ============================================================================
+    Testing Targets
+    ============================================================================
+    -->
+    <target name="test" depends="init, clean.tests, test.unit, test.cs, test.pdepend, test.phpmd, test.phploc, test.phpcb" description="Run tests" />
+
+    <target name="test.unit" depends="init, clean.tests.unit" description="Run unit tests">
+        <echo msg="Running unit tests..." />
+
+        <exec command="phpunit --verbose" dir="${project.basedir}/config" passthru="true" returnProperty="test.unit.result" />
+        <if>
+            <not>
+                <equals arg1="${test.unit.result}" arg2="0"/>
+            </not>
+
+            <then>
+                <fail msg="PHPUnit Tests Failed!"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="test.functional" depends="init, clean.tests.functional, test.functional.selenium" description="Run functional tests">
+    </target>
+
+    <target name="test.functional.selenium" description="Run selenium functional tests">
+        <echo msg="Running selenium functional tests..." />
+
+        <exec command="phpunit --verbose src" dir="tests/functional/selenium" passthru="true" returnProperty="test.functional.selenium.result" />
+        <if>
+            <not>
+                <equals arg1="${test.functional.selenium.result}" arg2="0"/>
+            </not>
+            <then>
+                <fail msg="Selenium Tests Failed!"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="test.cs">
+        <exec dir="${project.basedir}"
+            command="phpcs --report=checkstyle ${path.src}"
+            output="${path.build}/logs/checkstyle.xml">
+        </exec>
+    </target>
+
+    <target name="test.pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+        <exec dir="${project.basedir}"
+              command="pdepend --jdepend-xml=${path.build}/logs/jdepend.xml
+                               --jdepend-chart=${path.build}/pdepend/dependencies.svg
+                               --overview-pyramid=${path.build}/pdepend/overview-pyramid.svg
+                               ${path.src}"  />
+    </target>
+
+    <target name="test.phpmd" description="Generate pmd.xml using PHPMD">
+        <exec dir="${project.basedir}" command="phpmd ${path.src} xml codesize,unusedcode,naming,design --reportfile ${basedir}/build/logs/pmd.xml" />
+    </target>
+
+    <target name="test.phploc" description="Generate phploc.csv">
+        <exec dir="${project.basedir}" command="phploc --log-csv ${path.build}/logs/phploc.csv ${path.src}" />
+    </target>
+
+    <target name="test.phpcb"
+         description="Aggregate tool output with PHP_CodeBrowser">
+        <exec dir="${project.basedir}" command="phpcb --log ${path.build}/logs
+                                                      --source ${path.src}
+                                                      --output ${path.build}/code-browser" />
+    </target>
+
+    <!--
+    ============================================================================
+    Cleaning Targets
+    ============================================================================
+    -->
+    <target name="clean" depends="clean.tests"
+        description="Clean out build directories" />
+
+
+    <target name="clean.tests" description="Clean out tests" depends="clean.tests.functional, clean.tests.unit">
+        <echo msg="Cleaning tests..." />
+
+        <delete dir="${path.build}/api"/>
+        <delete dir="${path.build}/code-browser"/>
+        <delete dir="${path.build}/coverage"/>
+        <delete dir="${path.build}/logs"/>
+        <delete dir="${path.build}/pdepend"/>
+
+        <mkdir dir="${path.build}/api"/>
+        <mkdir dir="${path.build}/code-browser"/>
+        <mkdir dir="${path.build}/coverage"/>
+        <mkdir dir="${path.build}/logs"/>
+        <mkdir dir="${path.build}/pdepend"/>
+    </target>
+
+    <target name="clean.tests.functional" description="Clean out functional tests" depends="">
+        <echo msg="Cleaning functional tests..." />
+    </target>
+
+    <target name="clean.tests.unit" description="Clean out unit tests" depends="">
+        <echo msg="Cleaning unit tests..." />
+    </target>
+</project>

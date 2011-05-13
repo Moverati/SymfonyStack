@@ -4,9 +4,12 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services
                         http://symfony.com/schema/dic/services/services-1.0.xsd">
     <imports>
+        <!-- Base config -->
         <import resource="config.xml" />
+
         <import resource="assetic_dev.xml" />
         <import resource="framework_dev.xml" />
+        <import resource="monolog_dev.xml" />
         <import resource="web_profiler_dev.xml" />
     </imports>
 </container>

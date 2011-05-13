@@ -12,7 +12,10 @@
  */
 
 use Symfony\Component\HttpKernel\Kernel,
-    Symfony\Component\Config\Loader\LoaderInterface;
+    Symfony\Component\Config\Loader\LoaderInterface,
+    Symfony\Component\ClassLoader\DebugUniversalClassLoader,
+    Symfony\Component\HttpKernel\Debug\ErrorHandler,
+    Symfony\Component\HttpKernel\Debug\DebugExceptionHandler;
 
 /**
  * Application Kernel
@@ -23,10 +26,11 @@ use Symfony\Component\HttpKernel\Kernel,
  */
 class AppKernel extends Kernel
 {
-    const ENVIRONMENT_PROD = 'prod';
-    const ENVIORNMENT_INT  = 'int';
     const ENVIRONMENT_DEV  = 'dev';
-    
+    const ENVIRONMENT_PROD = 'prod';
+    const ENVIORNMENT_TEST = 'test';
+
+
     /**
      * Environments that have debugging enabled
      *
@@ -34,26 +38,50 @@ class AppKernel extends Kernel
      */
     private $debugEnvironments = array(
         self::ENVIRONMENT_DEV,
-        self::ENVIORNMENT_INT
+        self::ENVIORNMENT_TEST
     );
-    
+
     /**
      * Construct
      *
      * @param string  $environment
-     * @param boolean $debug 
+     * @param boolean $debug
      */
     public function __construct($environment, $debug = null)
     {
         // Normalize environment string
         $environment = strtolower($environment);
 
-        // Enable debug for supported environments by default
-        if ($debug === null && in_array($environment, $this->debugEnvironments)) {
-            $debug = true;
+        // Determine Environment
+        $environment = $this->determineEnvironment($environment);
+
+        // Determine Debug
+        $debug       = $this->determineDebug($debug, $environment);
+
+        if ($debug) {
+            // Pretty exceptions
+            set_exception_handler(new DebugExceptionHandler());
         }
-        
+
         parent::__construct($environment, $debug);
+
+        // Load the class cache
+        $this->loadClassCache();
+    }
+
+    /**
+     * Init
+     *
+     */
+    public function init()
+    {
+        if ($this->debug) {
+            ini_set('display_errors', true);
+            error_reporting(-1);
+
+            DebugUniversalClassLoader::enable();
+            ErrorHandler::register();
+        }
     }
 
     /**
@@ -64,6 +92,7 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
+            // Core Symfony Bundles
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
@@ -72,12 +101,15 @@ class AppKernel extends Kernel
             new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
-            
+
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            //new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+
             new Acme\DemoBundle\AcmeDemoBundle(),
-            //new Moverati\Bundle\KnplabsPaginatorBundle\KnplabsPaginatorBundle(),
-            //new FOS\UserBundle\FOSUserBundle()
+            new FOS\UserBundle\FOSUserBundle(),
+
+            //new Knplabs\Bundle\PaginatorBundle\KnplabsPaginatorBundle(),
+            new Moverati\Bundle\KnplabsPaginatorBundle\KnplabsPaginatorBundle(),
         );
 
         if (in_array($this->getEnvironment(), $this->debugEnvironments)) {
@@ -141,5 +173,54 @@ class AppKernel extends Kernel
         ));
 
         return $params;
+    }
+
+    /**
+     * Determine the environment
+     *
+     * @param string $environment
+     * @return string
+     */
+    private function determineEnvironment($environment)
+    {
+        if (in_array($environment, $this->debugEnvironments)
+            && isset($_SERVER['REQUEST_URI'])
+            && preg_match('/^\/app_([a-zA-Z0-9]+)\.php/', $_SERVER['REQUEST_URI'], $environmentMatch)) {
+            // Set url forced environment (/app_prod.php, /app_dev.php)
+            $environment = $environmentMatch[1];
+
+            // Fix $_SERVER vars
+            $_SERVER['SCRIPT_NAME']     = str_replace('/' . basename($_SERVER['SCRIPT_NAME']),
+                                                      $environmentMatch[0],
+                                                      $_SERVER['SCRIPT_NAME']);
+
+            $_SERVER['SCRIPT_FILENAME'] = str_replace('/' . basename($_SERVER['SCRIPT_FILENAME']),
+                                                      $environmentMatch[0],
+                                                      $_SERVER['SCRIPT_FILENAME']);
+
+            $_SERVER['PHP_SELF']        = str_replace('/' . basename($_SERVER['PHP_SELF']),
+                                                      $environmentMatch[0],
+                                                      $_SERVER['PHP_SELF']);
+        }
+
+        return $environment;
+    }
+
+
+    /**
+     * Determine the debug setting
+     *
+     * @param boolean $debug
+     * @param string  $environment
+     * @return boolean
+     */
+    private function determineDebug($debug, $environment)
+    {
+        // Enable debug for supported environments by default
+        if ($debug === null && in_array($environment, $this->debugEnvironments)) {
+            $debug = true;
+        }
+
+        return $debug;
     }
 }

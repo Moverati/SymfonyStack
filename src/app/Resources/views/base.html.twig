@@ -1,25 +1,86 @@
 <!DOCTYPE html>
-<html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <!-- Start: Meta -->
+        {% block headMeta -%}
+        <meta http-equiv="Content-Type"    content="text/html; charset=utf-8"              />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"                      />
+        <meta name="viewport"              content="width=device-width, initial-scale=1.0" />
+        {% endblock -%}
+        <!-- End: Meta -->
 
-        <!-- Start: Styles -->
+        <title>
+            {%- block title %}{% set hasTitle = true %}{% endblock -%}
+            {% if not hasTitle %} | {% endif %}
+            {{- "Bahamas Backend" | trans -}}
+        </title>
+
+        <!-- Start: Links -->
+        {% block headLinks -%}
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+
+        <!-- For iPhone 4 with high-resolution Retina display: -->
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('apple-touch-icon-114x114-precomposed.png') }}" />
+
+        <!-- For first-generation iPad: -->
+        <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="{{ asset('apple-touch-icon-72x72-precomposed.png') }}"   />
+
+        <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+        <link rel="apple-touch-icon-precomposed"                 href="{{ asset('apple-touch-icon-precomposed.png') }}"         />
+
+        <!-- About humans.txt http://humanstxt.org/ -->
+        <link rel="author" href="{{ asset('humans.txt') }}" />
+
         {# assetic filter="?yui_css", output="styles/default.css",
             "@MainBundle/Resources/sass/main.scss",
             "@AnotherBundle/Resources/sass/more.scss"
         %}
         <link href="{{ asset_url }}" rel="stylesheet" />
         {% endassetic #}
-        {% block styles %}{% endblock %}
-        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+        {% endblock -%}
+        <!-- End: Links -->
+
+        <!-- Start: Styles -->
+        {% block headStyles -%}
+        {% endblock -%}
         <!-- End: Styles -->
+
+        <!-- Start: Scripts -->
+        {% block headScripts -%}
+        <script type="test/javascript" src="{{ asset('scripts/modernizr-1.7.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('scripts/jquery-1.5.2.min.js') }}"> </script>
+        {% endblock -%}
+        <!-- End: Scripts -->
     </head>
 
     <body>
-        {% block body %}{% endblock %}
+        <!-- Start: Document -->
+        <div class="doc">
+            <!-- Start: Header -->
+            <div class="hd"></div>
+            <!-- End: Header -->
 
+            <!-- Start: Body -->
+            <div class="bd">
+                {% block content "" %}
+            </div>
+            <!-- End: Body -->
 
-        {% block scripts %}{% endblock %}
+            <!-- Start: Footer -->
+            <div class="ft"></div>
+            <!-- End: Footer -->
+        </div>
+        <!-- End: Document -->
+
+        <!-- Start: Inline Scripts -->
+        {% block inlineScripts -%}
+        {% endblock -%}
+        <!-- End: Inline Scripts -->
     </body>
 </html>

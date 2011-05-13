@@ -7,8 +7,8 @@
                                    http://symfony.com/schema/dic/symfony
                                    http://symfony.com/schema/dic/symfony/symfony-1.0.xsd"
 >    
-    <config charset="UTF-8">
-        <csrf-protection enabled="true" secret="%csrf.secret%" />
+    <config charset="UTF-8" secret="%kernel.secret%">
+        <csrf-protection enabled="true" />
         <router resource="%kernel.root_dir%/config/routing.xml" />
         <validation enabled="true" annotations="true" />
         <templating>
@@ -16,7 +16,8 @@
             <engine>php</engine>
             <assets-base-url>%assets.base_urls%</assets-base-url>
         </templating>
-        <session default-locale="%locale%" lifetime="3600" auto-start="true" />
+        <session default-locale="%kernel.locale%" lifetime="3600" auto-start="true" />
         <translator fallback="en" />
+        <esi enabled="true" />
     </config>
 </srv:container>

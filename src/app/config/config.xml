@@ -6,39 +6,23 @@
     <imports>
         <import resource="defaults.xml" />
 
-        <import resource="../../config/db.xml" />
+        <import resource="../../config/parameters.ini" ignore-errors="true"/>
 
-        <import resource="assetic.xml" />
+        <import resource="../../config/db.xml"         ignore-errors="true" />
+        <import resource="../../config/mail.xml"       ignore-errors="true" />
+
+
         <import resource="framework.xml" />
         <import resource="doctrine.xml" />
         <import resource="mailer.xml" />
         <import resource="security.xml" />
-        <import resource="jms_security_extra.yml" />
+        <import resource="assetic.xml" />
+        <import resource="monolog.xml" />
+
+<!--    <import resource="jms_security_extra.yml" />-->
         <import resource="sensio_framework_extra.yml" />
 
-        <!--<import resource="knplabs_paginator.yml" />-->
-        <!--<import resource="fos_user.yml" />-->
-  
-        <import resource="../../config/mail.xml" />
+        <import resource="knplabs_paginator.yml" />
+        <import resource="fos_user.yml" />
     </imports>
-
-
-    <parameters>
-        <!-- doctrine.xml -->
-        <parameter key="doctrine_migrations.dir_name">%kernel.data_dir%/migrations</parameter>
-        <!--
-        <parameter key="doctrine_migrations.table_name">DoctrineMigrationsVersion</parameter>
-        <parameter key="doctrine_migrations.namespace">Application\Migrations</parameter>
-        <parameter key="doctrine_migrations.name">Application Migrations</parameter>
-        -->
-
-        <!-- security.xml -->
-        <!--
-        <parameter key="security.acl.dbal.class_table_name">AclClass</parameter>
-        <parameter key="security.acl.dbal.entry_table_name">AclEntry</parameter>
-        <parameter key="security.acl.dbal.oid_table_name">AclObjectIdentity</parameter>
-        <parameter key="security.acl.dbal.oid_ancestors_table_name">AclObjectIdentityAncestor</parameter>
-        <parameter key="security.acl.dbal.sid_table_name">AclSecurityIdentity</parameter>
-        -->
-    </parameters>
 </container>

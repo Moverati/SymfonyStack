@@ -4,13 +4,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services
                         http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="csrf.secret">b011a4f1b18d2c8b01dcabdfbbfc09310</parameter>
-        <parameter key="locale">en</parameter>
+        <!-- framework.xml -->
+        <parameter key="kernel.secret">b011a4f1b18d2c8b01dcabdfbbfc09310</parameter>
+        <parameter key="kernel.locale">en</parameter>
         <parameter key="assets.base_urls"></parameter>
 
         <!-- doctrine.xml -->
-        <parameter key="db.default.driver"></parameter>
-        <parameter key="db.default.dbname"></parameter>
+        <parameter key="db.default.driver">pdo_sqlite</parameter>
+        <parameter key="db.default.dbname">%kernel.data_dir%/db/%kernel.name%.sqlite</parameter>
         <parameter key="db.default.host"></parameter>
         <parameter key="db.default.user"></parameter>
         <parameter key="db.default.password"></parameter>
@@ -20,5 +21,23 @@
         <parameter key="mail.host"></parameter>
         <parameter key="mail.username"></parameter>
         <parameter key="mail.password"></parameter>
+
+        <!-- doctrine.xml -->
+        <parameter key="doctrine_migrations.dir_name">%kernel.root_dir%/Resources/migrations</parameter>
+
+        <!--
+        <parameter key="doctrine_migrations.table_name">DoctrineMigrationsVersion</parameter>
+        <parameter key="doctrine_migrations.namespace">Application\Migrations</parameter>
+        <parameter key="doctrine_migrations.name">Application Migrations</parameter>
+        -->
+
+        <!-- security.xml -->
+        <!--
+        <parameter key="security.acl.dbal.class_table_name">AclClass</parameter>
+        <parameter key="security.acl.dbal.entry_table_name">AclEntry</parameter>
+        <parameter key="security.acl.dbal.oid_table_name">AclObjectIdentity</parameter>
+        <parameter key="security.acl.dbal.oid_ancestors_table_name">AclObjectIdentityAncestor</parameter>
+        <parameter key="security.acl.dbal.sid_table_name">AclSecurityIdentity</parameter>
+        -->
     </parameters>
 </container>

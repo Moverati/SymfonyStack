@@ -6,9 +6,6 @@
         <default key="_controller">AcmeDemoBundle:Welcome:index</default>
     </route>
 
-    <import resource="@BahamasBackendBundle/Resources/config/routing.xml" prefix="/backend" />
-    <import resource="@BahamasFrontendBundle/Resources/config/routing.xml" />
-
     <!--
     <import resource="@AcmeDemoBundle/Controller/SecuredController.php" type="annotation" />
     -->

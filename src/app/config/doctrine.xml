@@ -23,8 +23,8 @@
                             connection="default"
                             metadata-cache-driver="array"
                             result-cache-driver="array"
-                            query-cache-driver="array">
-                <mapping name="AcmeDemoBundle" />
+                            query-cache-driver="array"
+                            auto-mapping="true">
             </entity-manager>
         </orm>
     </config>

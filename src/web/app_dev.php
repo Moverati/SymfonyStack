@@ -18,8 +18,10 @@
  * @category  RAPP
  * @copyright Copyright (c) 2011 RAPP. (http://www.rapp.com/)
  */
- 
-$_ENV['ENVIRONMENT'] = 'dev';
-$_ENV['DEBUG']       = true;
+
+if (!isset($_SERVER['ENVIRONMENT']) || $_SERVER['ENVIRONMENT'] != 'prod') {
+    $_SERVER['ENVIRONMENT'] = 'dev';
+    $_SERVER['DEBUG']       = (isset($_SERVER['DEBUG']) && !$_SERVER['DEBUG']) ? false : true;
+}
 
 require_once 'app.php';

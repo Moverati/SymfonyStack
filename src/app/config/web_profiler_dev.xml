@@ -6,5 +6,5 @@
                         http://symfony.com/schema/dic/services/services-1.0.xsd
                         http://symfony.com/schema/dic/webprofiler
                         http://symfony.com/schema/dic/webprofiler/webprofiler-1.0.xsd">
-    <config toolbar="true" intercept-redirects="false" />
+    <config toolbar="true" intercept-redirects="true" verbose="true" />
 </srv:container>

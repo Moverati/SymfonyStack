@@ -25,14 +25,14 @@ require_once __DIR__ . '/../app/AppKernel.php';
 use Symfony\Component\HttpFoundation\Request;
 
 // Environment
-$environment = isset($_ENV['ENVIRONMENT']) ? $_ENV['ENVIRONMENT']
-                                           : AppKernel::ENVIRONMENT_PROD;
+$environment = isset($_SERVER['ENVIRONMENT']) ? $_SERVER['ENVIRONMENT']
+                                              : AppKernel::ENVIRONMENT_PROD;
 
 // Whether to force debugging
-$debug       = isset($_ENV['DEBUG'])       ? (bool) $_ENV['DEBUG']     : null;
+$debug       = isset($_SERVER['DEBUG'])       ? (bool) $_SERVER['DEBUG']      : null;
 
 // Wether to use the internal app cache
-$httpCache   = isset($_ENV['HTTP_CACHE'])  ? (bool) $_ENV['HTTP_CACE'] : false;
+$httpCache   = isset($_SERVER['HTTP_CACHE'])  ? (bool) $_SERVER['HTTP_CACHE'] : false;
 
 // Setup the kernel and handle the request
 $kernel = new AppKernel($environment, $debug);
@@ -41,9 +41,10 @@ $kernel = new AppKernel($environment, $debug);
 if ($httpCache) {
     require_once __DIR__ . '/../app/bootstrap_cache.php.cache';
     require_once __DIR__ . '/../app/AppCache.php';
-    
+
     $kernel = new AppCache($kernel);
 }
 
+// Handle the request
 $kernel->handle(Request::createFromGlobals())
        ->send();
